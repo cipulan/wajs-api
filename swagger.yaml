@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: WhatsApp Messaging API
+  version: 1.0.0
+  description: API to send WhatsApp messages using whatsapp-web.js
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /send:
+    post:
+      summary: Send a WhatsApp message
+      description: Send a text message to a WhatsApp number
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - number
+                - message
+              properties:
+                number:
+                  type: string
+                  example: "6281234567890"
+                message:
+                  type: string
+                  example: "Hello from API!"
+      responses:
+        '200':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  to:
+                    type: string
+        '400':
+          description: Missing number or message
+        '401':
+          description: Unauthorized
+        '500':
+          description: Failed to send message
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
