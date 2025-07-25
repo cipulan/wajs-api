@@ -13,6 +13,8 @@ const client = new Client({
     }
 });
 
+let isClientReady = false;
+
 client.on('qr', (qr) => {
     console.log('QR RECEIVED');
     qrcode.generate(qr, { small: true });
@@ -20,16 +22,20 @@ client.on('qr', (qr) => {
 
 client.on('ready', () => {
     console.log('WhatsApp Client is ready!');
+    isClientReady = true;
 });
 
 client.on('auth_failure', (msg) => {
     console.error('AUTHENTICATION FAILURE', msg);
+    isClientReady = false;
 });
 
 client.on('disconnected', (reason) => {
     console.log('Client was logged out', reason);
+    isClientReady = false;
 });
 
 client.initialize();
 
 module.exports = client;
+module.exports.isClientReady = () => isClientReady;

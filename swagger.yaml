@@ -48,6 +48,90 @@ paths:
           description: Unauthorized
         '500':
           description: Failed to send message
+  /send-group:
+    post:
+      summary: Send a WhatsApp message to a group
+      description: Send a text message to a WhatsApp group using its group ID
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - groupId
+                - message
+              properties:
+                groupId:
+                  type: string
+                  example: "1234567890-123456789@g.us"
+                message:
+                  type: string
+                  example: "Hello group from API!"
+      responses:
+        '200':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  to:
+                    type: string
+        '400':
+          description: Missing groupId or message
+        '401':
+          description: Unauthorized
+        '500':
+          description: Failed to send message to group
+  /groups:
+    get:
+      summary: Get WhatsApp groups
+      description: Retrieve a list of WhatsApp groups the client is a member of
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "My Group"
+                    id:
+                      type: string
+                      example: "1234567890-123456789@g.us"
+        '401':
+          description: Unauthorized
+  /status:
+    get:
+      summary: Get WhatsApp client status
+      description: Check if the WhatsApp client is ready to send messages
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: WhatsApp client status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  whatsapp:
+                    type: string
+                    enum: [ready, not_ready]
+                    example: ready
+        '401':
+          description: Unauthorized
 
 components:
   securitySchemes:
