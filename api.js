@@ -43,4 +43,40 @@ app.post("/send", async (req, res) => {
     }
 });
 
+app.post("/send-group", async (req, res) => {
+    const { groupId, message } = req.body;
+
+    if (!groupId || !message) {
+        return res.status(400).json({ error: "Missing groupId or message" });
+    }
+
+    // Ensure groupId has WhatsApp group format
+    const chatId = groupId.includes("@g.us") ? groupId : `${groupId}@g.us`;
+
+    try {
+        await client.sendMessage(chatId, message);
+        res.status(200).json({ status: "success", to: groupId });
+    } catch (err) {
+        console.error("Failed to send message to group:", err);
+        res.status(500).json({ error: "Failed to send message to group" });
+    }
+});
+
+app.get('/groups', async (req, res) => {
+    const chats = await client.getChats();
+    const groups = chats.filter(chat => chat.isGroup);
+    
+    const result = groups.map(group => ({
+        name: group.name,
+        id: group.id._serialized
+    }));
+
+    res.json(result);
+});
+
+app.get('/status', (req, res) => {
+    const ready = client.isClientReady ? client.isClientReady() : false;
+    res.json({ whatsapp: ready ? 'ready' : 'not_ready' });
+});
+
 module.exports = app;
