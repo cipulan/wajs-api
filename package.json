@@ -14,7 +14,7 @@
     "express": "^5.1.0",
     "qrcode-terminal": "^0.12.0",
     "swagger-ui-express": "^5.0.1",
-    "whatsapp-web.js": "^1.34.3",
+    "whatsapp-web.js": "https://github.com/pedroslopez/whatsapp-web.js/archive/refs/tags/v1.34.3.tar.gz",
     "yamljs": "^0.3.0"
   }
 }
